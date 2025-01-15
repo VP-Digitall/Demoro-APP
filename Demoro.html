@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página Inicial - Banda de Pagode</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      color: white;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    /* Fundo com vídeo */
+    .background-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      opacity: 0.5;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      padding: 50px 20px;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+      text-shadow: 1px 1px 2px black;
+      
+    }
+
+    p {
+      font-size: 1.2em;
+      margin-bottom: 40px;
+      font-size: medium;
+      padding: 60px;
+      text-shadow: 1px 1px 2px black;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .button {
+      text-decoration: none;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: white;
+      border-radius: 8px;
+      border: 2px solid white;
+      background: transparent;
+      transition: all 0.3s ease-in-out;
+      text-shadow: 1px 1px 2px black;;
+    }
+
+    .button:hover {
+      background: white;
+      color: black;
+    }
+
+    .footer p {
+      margin-top: 50px;
+      font-size: 0.9em;
+      opacity: 0.8;
+      font-size: xx-small;
+    }
+  </style>
+</head>
+<body>
+
+  <video class="background-video" autoplay loop muted>
+    <source src="Snapinsta.app_video_AQO-Z7tDL_x5WCofyWD-v5AHShn0vU18NRfDY0JnNpzbWWs_DkGFqz41sotyI_D8Fl9C2IExITXaX4aA6uVVJThyiJS-2M4OVUe8tW0.mp4" type="video/mp4">
+  </video>
+
+  <div class="container">
+    <h1>Bem-vindos, Membros da Banda</h1>
+    <p>(Este site é exclusivo para uso interno da banda. Aqui, você pode organizar a agenda de shows e gerenciar as finanças.)</p>
+    <div class="button-container">
+      <a href="shows.html" class="button">AGENDA</a>
+      <a href="financeiro.html" class="button">FINANCEIRO</a>
+    </div>
+    <div class="footer">
+      <p>&copy; 2025 VP digital | Todos os direitos reservados.</p>
+    </div>
+  </div>
+
+</body>
+</html>
