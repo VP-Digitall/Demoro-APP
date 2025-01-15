@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cronograma de Músicas - Banda de Pagode</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* Fundo com vídeo */
+    .background-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      opacity: 0.5;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      padding: 20px;
+      color: white;
+    }
+
+    h1 {
+      text-align: center;
+      color: white;
+    }
+
+    .song-schedule {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .show-schedule {
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 15px;
+      width: 300px;
+      border-radius: 8px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .show-schedule h3 {
+      color: #008CBA;
+      margin-bottom: 10px;
+    }
+
+    .songs-list {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .song-item {
+      display: flex;
+      justify-content: space-between;
+      background-color: #f7f7f7;
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 4px;
+    }
+
+    .song-item .song-title {
+      flex-grow: 1;
+      color: #333;
+    }
+
+    .song-item .song-actions {
+      display: flex;
+      gap: 10px;
+      opacity: 0.7;
+    }
+
+    .song-item .song-actions i {
+      cursor: pointer;
+      color: #FF6F61;
+    }
+
+    .song-form {
+      margin-top: 20px;
+      background-color: rgba(255, 255, 255, 0.7);
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .form-button {
+      background-color: #008CBA;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .form-button:hover {
+      background-color: #005f6b;
+    }
+  </style>
+</head>
+<body>
+
+  <video class="background-video" autoplay loop muted>
+    <source src="Snapinsta.app_video_AQMZmADLdETrb--KzJG2qQnkYkjYdnul4io8N0xkXjEgB_IWj4I6Qk5XLbsoT2KKt-cSt8yY_PBpyaqWpiPrzUFAc9pNeAFesQtG9PU.mp4" type="video/mp4">
+  </video>
+
+  <div class="container">
+    <h1>Cronograma de Músicas</h1>
+
+    <div class="song-schedule" id="show-schedule"></div>
+
+    <div class="song-form">
+      <h3>Adicionar Música ao Cronograma</h3>
+      <input type="text" id="song-title" class="form-input" placeholder="Título da Música" />
+      <input type="text" id="show-date" class="form-input" placeholder="Data do Show" />
+      <button class="form-button" onclick="addSong()">Adicionar Música</button>
+    </div>
+  </div>
+
+  <script>
+    // Função para carregar os cronogramas de músicas salvos no localStorage
+    function loadSchedule() {
+      const schedules = JSON.parse(localStorage.getItem('schedules')) || [];
+      const showScheduleContainer = document.getElementById('show-schedule');
+      showScheduleContainer.innerHTML = '';
+
+      schedules.forEach((schedule, showIndex) => {
+        const scheduleElement = document.createElement('div');
+        scheduleElement.classList.add('show-schedule');
+
+        scheduleElement.innerHTML = `
+          <h3>Show: ${schedule.date}</h3>
+          <ul class="songs-list" id="songs-list-${showIndex}">
+            ${schedule.songs.map((song, songIndex) => `
+              <li class="song-item">
+                <span class="song-title">${song}</span>
+                <div class="song-actions">
+                  <i class="fa fa-pencil" onclick="editSong(${showIndex}, ${songIndex})"></i>
+                  <i class="fa fa-trash" onclick="deleteSong(${showIndex}, ${songIndex})"></i>
+                </div>
+              </li>
+            `).join('')}
+          </ul>
+        `;
+
+        showScheduleContainer.appendChild(scheduleElement);
+      });
+    }
+
+    // Função para adicionar uma música a um show
+    function addSong() {
+      const songTitle = document.getElementById('song-title').value;
+      const showDate = document.getElementById('show-date').value;
+
+      if (!songTitle || !showDate) {
+        alert('Por favor, preencha o título da música e a data do show!');
+        return;
+      }
+
+      const schedules = JSON.parse(localStorage.getItem('schedules')) || [];
+      const existingSchedule = schedules.find(schedule => schedule.date === showDate);
+
+      if (existingSchedule) {
+        existingSchedule.songs.push(songTitle);
+      } else {
+        schedules.push({ date: showDate, songs: [songTitle] });
+      }
+
+      localStorage.setItem('schedules', JSON.stringify(schedules));
+      loadSchedule();
+
+      document.getElementById('song-title').value = '';
+      document.getElementById('show-date').value = '';
+    }
+
+    // Função para editar uma música
+    function editSong(showIndex, songIndex) {
+      const schedules = JSON.parse(localStorage.getItem('schedules'));
+      const song = schedules[showIndex].songs[songIndex];
+
+      const newSongTitle = prompt('Editar Título da Música:', song);
+
+      if (newSongTitle) {
+        schedules[showIndex].songs[songIndex] = newSongTitle;
+        localStorage.setItem('schedules', JSON.stringify(schedules));
+        loadSchedule();
+      }
+    }
+
+    // Função para excluir uma música
+    function deleteSong(showIndex, songIndex) {
+      const schedules = JSON.parse(localStorage.getItem('schedules'));
+      schedules[showIndex].songs.splice(songIndex, 1);
+
+      if (schedules[showIndex].songs.length === 0) {
+        schedules.splice(showIndex, 1);
+      }
+
+      localStorage.setItem('schedules', JSON.stringify(schedules));
+      loadSchedule();
+    }
+
+    // Carregar os cronogramas ao iniciar a página
+    loadSchedule();
+  </script>
+
+  <!-- Ícones FontAwesome para edição e exclusão -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</body>
+</html>
